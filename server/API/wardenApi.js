@@ -3,16 +3,15 @@ const wardenApp=exp.Router()
 
 //to import the warden model
 const Warden=require('../models/warden/wardenModel')
-
 // to import verification model
 const Verification=require('../models/warden/verificationModel')
-
+const verifyJWT=require('../middlewares/verifyJWT')
 //to import notification model
 const Notification=require('../models/warden/notificationModel')
 wardenApp.use(exp.json())
 
 //to add the warden into the database
-wardenApp.post("/warden",async(req,res)=>{
+wardenApp.post("/warden",verifyJWT,async(req,res)=>{
     const newWarden= req.body;
     const wardenDoc=new Warden(newWarden);
     console.log(wardenDoc);
@@ -21,7 +20,7 @@ wardenApp.post("/warden",async(req,res)=>{
 })
 
 //to verify the complaint givn by the student
-wardenApp.put("/warden/verify", async (req, res) => {
+wardenApp.put("/warden/verify",verifyJWT,async (req, res) => {
     try {
         const { complaintId, isLegit, remarks } = req.body;
         // Check if the complaint exists
@@ -51,7 +50,7 @@ wardenApp.put("/warden/verify", async (req, res) => {
 })
 
 //to send the notification to the student
-wardenApp.post('/warden/notify', async (req, res) => {
+wardenApp.post('/warden/notify', verifyJWT,async (req, res) => {
   try {
     const { title, description, receiverId, complaintId } = req.body;
 
