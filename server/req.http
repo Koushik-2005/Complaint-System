@@ -1,8 +1,6 @@
 #To send the responses
-
 ###To create the warden
-
-post http://localhost:4700/warden-api/warden
+post http://localhost:4700/warden-api/register
 Content-Type: application/json
 
 {
@@ -13,21 +11,41 @@ Content-Type: application/json
      "phone":9234567234
 }
 
-###To verify the complaint by the warden
-put http://localhost:4700/warden-api/warden/verify
+###To sign in as warden
+post http://localhost:4700/warden-api/login
 Content-Type: application/json
 
 {
-  "complaintId": "665f1b1b1234567890abcdef",
+    "email":"abhi1234@gmail.com",
+    "password":"abhi1234"
+}
+
+###To verify the complaint by the warden
+put http://localhost:4700/warden-api/warden/verify
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlZmIyMDkyYWFiMmY1MzE5OTQ0N2UiLCJlbWFpbCI6ImFiaGkxMjM0QGdtYWlsLmNvbSIsInJvbGUiOiJ3YXJkZW4iLCJpYXQiOjE3NTEwNTUxNDIsImV4cCI6MTc1MTE0MTU0Mn0.ww465sX4B9lg0DCnio20R879NGGYqk-1rrGY0y5B83E
+
+{
+  "complaintId": "685ef8ba92aab2f531994470",
   "isLegit": true,
   "remarks": "Water leakage confirmed in Room 102"
 }
 
 ###To send the notifications to the hostellers
-put http://localhost:4700/warden-api/warden/notify
+post http://localhost:4700/warden-api/warden/notify
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlZmIyMDkyYWFiMmY1MzE5OTQ0N2UiLCJlbWFpbCI6ImFiaGkxMjM0QGdtYWlsLmNvbSIsInJvbGUiOiJ3YXJkZW4iLCJpYXQiOjE3NTEwNTUxNDIsImV4cCI6MTc1MTE0MTU0Mn0.ww465sX4B9lg0DCnio20R879NGGYqk-1rrGY0y5B83E
 
 {
+  "complaintId": "685ef8ba92aab2f531994470",
   "title":"Your Complaint is verified",
   "description":"Your room isn't cleaned since for 4 weeks, it will be completed within 2 working days."
 }
+
+
+###get the complaintsStatus 
+get http://localhost:4700/warden-api/api/status/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYwMmNjZDA0YTI0OGFlN2ZiZGVlMDYiLCJlbWFpbCI6ImtlZXJ0aGlAZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3NTExMzMzOTEsImV4cCI6MTc1MTIxOTc5MX0.WqwAEE-EYcMCYMVgRpy7lx65qK2wwdmIRFFjH5SlKrI
+###get the complaints by particular status
+get http://localhost:4700/warden-api/statuses/Completed
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYwMmNjZDA0YTI0OGFlN2ZiZGVlMDYiLCJlbWFpbCI6ImtlZXJ0aGlAZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3NTExMzMzOTEsImV4cCI6MTc1MTIxOTc5MX0.WqwAEE-EYcMCYMVgRpy7lx65qK2wwdmIRFFjH5SlKrI

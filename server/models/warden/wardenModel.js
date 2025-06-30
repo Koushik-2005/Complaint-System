@@ -20,7 +20,7 @@ const wardenSchema = new mongoose.Schema({
         required: true 
     },
     phone: {
-        type:number,
+        type: Number,
         required:true
     },
     profileImageUrl: String,
