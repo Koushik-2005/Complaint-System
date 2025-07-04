@@ -5,6 +5,10 @@ const hostellerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    Id:{
+        type:String,
+        required:true
+    },
     firstName: { 
         type: String, 
         required: true 
@@ -31,4 +35,3 @@ const hostellerSchema = new mongoose.Schema({
 
 const Hosteller = mongoose.model('Hosteller', hostellerSchema);
 module.exports = Hosteller;
-//Wait i am stopping my screen
