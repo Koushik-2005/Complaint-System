@@ -12,8 +12,8 @@ const complaintStatusSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['In Progress','Completed'],
-    default: 'Not yet started',
+    enum: ['Not Started','In Progress','Completed','verified','rejected'],
+    default: 'Not Started'
   },
   updatedAt:   { type: Date, default: Date.now }
 });
