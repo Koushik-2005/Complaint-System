@@ -27,8 +27,8 @@ const complaintSchema = new mongoose.Schema({
     },      // roll-number
   status:      { 
     type: String, 
-    enum: ['Not Done Yet','In Progress','Completed','verified','rejected'],
-                 default: 'Not Done Yet' 
+    enum: ['Not Started','In Progress','Completed','verified','rejected'],
+                 default: 'Not Started' 
                 },
 
   attempts:    { type: Number, default: 1 },
