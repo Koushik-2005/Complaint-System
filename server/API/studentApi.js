@@ -244,19 +244,40 @@ studentApp.put(
 
 
 //edit complaint
-studentApp.put("/complaint/edit/:complaintId", verifyToken,expressAsyncHandler(async (req, res) => {
-  const { complaintId } = req.params;
-  const updatedData = req.body;
+studentApp.put(
+  "/complaint/edit/:complaintId",
+  verifyToken,
+  expressAsyncHandler(async (req, res) => {
+    const { complaintId } = req.params;
+    const updatedData = req.body;
 
-  // Find the complaint and update it
-  const updatedComplaint = await ComplaintModel.findByIdAndUpdate(complaintId, updatedData, { new: true });
+    
+    const complaint = await ComplaintModel.findById(complaintId);
+    if (!complaint) {
+      return res.status(404).send({ message: "Complaint not found" });
+    }
 
-  if (!updatedComplaint) {
-    return res.status(404).send({ message: "Complaint not found" });
-  }
+    const lockedStatuses = ["Resolved", "Completed"];
+    if (lockedStatuses.includes(complaint.status)) {
+      return res.status(403).send({
+        message: `Cannot edit a complaint that is already ${complaint.status}.`,
+      });
+    }
 
-  res.status(200).send({ message: "Complaint updated successfully", payload: updatedComplaint });
-}))
+   
+    const updatedComplaint = await ComplaintModel.findByIdAndUpdate(
+      complaintId,
+      updatedData,
+      { new: true }
+    );
+
+    res.status(200).send({
+      message: "Complaint updated successfully",
+      payload: updatedComplaint,
+    });
+  })
+);
+
 
 
 
