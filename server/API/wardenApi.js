@@ -3,7 +3,6 @@ const wardenApp=exp.Router()
 const expressAsyncHandler=require('express-async-handler')
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const ComplaintStatusModel=require('../models/hosteller/complaintStatusModel');
 
 //to import the warden model
 const Warden=require('../models/warden/wardenModel')
@@ -23,16 +22,10 @@ const verifyJWT=require('../middleware/verifytoken')
 //to import notification model
 const Notification=require('../models/warden/notificationModel')
 
-wardenApp.use(exp.json())
+//to import complaint status model
+const ComplaintStatusModel=require('../models/hosteller/complaintStatusModel')
 
-//to add the warden into the database
-// wardenApp.post("/warden",verifyJWT,async(req,res)=>{
-//     const newWarden= req.body;
-//     const wardenDoc=new Warden(newWarden);
-//     console.log(wardenDoc);
-//     await wardenDoc.save();
-//     res.send({Message:"Warden is added"});
-// })
+wardenApp.use(exp.json())
 
 //to verify the complaint givn by the student
 wardenApp.put(
@@ -65,51 +58,6 @@ wardenApp.put(
   })
 );
 
-
-
-
-
-
-
-///////to get all the complaint status
-wardenApp.get(
-  "/api/status/all",
-   verifyJWT,
-  expressAsyncHandler(async (req, res) => {
-    try {
-      const statuses = await ComplaintStatusModel.find()
-        .sort({ updatedAt: -1 }); // most recent first
-
-      res.send({ message: "All complaint statuses retrieved", payload: statuses });
-    } catch (error) {
-      res.status(500).send({ message: "Server error", error: error.message });
-    }
-  })
-);
-
-/////to get the complaintStatus by status
-
-wardenApp.get(
-  "/statuses/:status",
-  verifyJWT,
-  expressAsyncHandler(async (req, res) => {
-    const { status } = req.params;
-
-    // Validate status
-    const validStatuses = ["In Progress", "Completed", "Not yet started"];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).send({ message: "Invalid status value" });
-    }
-
-    try {
-      const statuses = await ComplaintStatusModel.find({ status }).sort({ updatedAt: -1 });
-
-      res.send({ message: `Complaints with status: ${status}`, payload: statuses });
-    } catch (error) {
-      res.status(500).send({ message: "Server error", error: error.message });
-    }
-  })
-);
 //to send the notification to the student
 wardenApp.post('/warden/notify', verifyJWT,expressAsyncHandler(async (req, res) => {
   try {
@@ -251,7 +199,7 @@ wardenApp.get(
   "/complaints/all",             // better REST path
   verifyJWT,         // restrict to warden/admin
   expressAsyncHandler(async (req, res) => {
-    const complaints = await ComplaintModel.find().sort({ createdAt: -1 }); // latest first
+    const complaints = await Complaint.find().sort({ createdAt: -1 }); // latest first
 
     if (!complaints.length) {
       return res.status(404).send({ message: "No complaints found" });
@@ -262,6 +210,30 @@ wardenApp.get(
       payload: complaints
     });
   })
+);
+
+///to get the complaintStatus by status
+
+wardenApp.get(
+  "/statuses/:status",
+  verifyJWT,
+  expressAsyncHandler(async (req, res) => {
+    const { status } = req.params;
+
+    // Validate status
+    const validStatuses = ["In Progress", "Completed", "Not yet started"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).send({ message: "Invalid status value" });
+    }
+
+    try {
+      const statuses = await ComplaintStatusModel.find({ status }).sort({ updatedAt: -1 });
+
+      res.send({ message: `Complaints with status: ${status}`, payload: statuses });
+    } catch (error) {
+      res.status(500).send({ message: "Server error", error: error.message });
+    }
+  })
 );
 
 

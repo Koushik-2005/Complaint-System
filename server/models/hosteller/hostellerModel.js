@@ -35,3 +35,4 @@ const hostellerSchema = new mongoose.Schema({
 
 const Hosteller = mongoose.model('Hosteller', hostellerSchema);
 module.exports = Hosteller;
+//Wait i am stopping my screen
